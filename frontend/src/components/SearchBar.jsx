@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/ShopContext";
-import { assets } from "../assets/assets";
+
 import { useLocation } from "react-router-dom";
 
 const SearchBar = () => {
@@ -29,11 +29,11 @@ const SearchBar = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <img src={assets.search_icon} className="w-4" alt="" />
+        <img src="/search_icon.png" className="w-4" alt="" />
       </div>
 
       <img
-        src={assets.cross_icon}
+        src="/cross_icon.png"
         className="inline w-3 cursor-pointer"
         alt=""
         onClick={() => setShowSearch(false)}

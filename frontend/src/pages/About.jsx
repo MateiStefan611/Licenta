@@ -1,6 +1,6 @@
 import Title from "../components/Title";
 
-import { assets } from "../assets/assets";
+
 import NewsletterBox from "../components/NewsletterBox";
 
 const About = () => {
@@ -12,29 +12,21 @@ const About = () => {
 
       <div className="my-10 flex flex-col md:flex-row gap-16">
         <img
-          src={assets.about_img}
+          src="/about_img.png"
           className="w-full md:max-w-[450px]"
           alt=""
         />
         <div className="flex flex-col justify-center gap-6 md:w-2/4 text-gray-600">
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolor
-            quidem culpa sapiente necessitatibus similique, quaerat nisi fugiat
-            at officiis tempora laboriosam ipsam iusto? Veritatis illum ipsum
-            nihil delectus deserunt voluptates, officia nemo nulla aspernatur
-            laboriosam.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta a
-            doloremque vitae consectetur, quas earum voluptatum nobis itaque
-            veritatis, ut ipsam eius sed ab fugiat.
+            At Forever, we believe that fragrance is more than just a scent — it’s an experience, a memory, a statement. Founded with a passion for quality and 
+            elegance, we carefully select each perfume to offer you only the finest aromas from around the world. Our mission is to help you discover and celebrate 
+            your unique identity through exquisite fragrances that linger in the heart and mind.
           </p>
 
           <b className="text-gray-800">Our Mission</b>
           <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit
-            eius officia fugit sequi libero possimus temporibus commodi
-            doloremque omnis saepe.
+            To inspire confidence and self-expression by providing high-quality, captivating fragrances that enhance every moment. 
+            We are committed to exceptional customer experience, authenticity, and bringing the art of perfume closer to you.
           </p>
         </div>
       </div>

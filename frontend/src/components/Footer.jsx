@@ -1,25 +1,24 @@
-import { assets } from "../assets/assets";
+import { Link, NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
     <div>
       <div className="flex flex-col sm:grid grid-cols-[3fr_1fr_1fr] gap-14 my-10 mt-40 text-sm">
         <div>
-          <img src={assets.logo} className="mb-5 w-32" alt="" />
+          <img src="/logo.png" className="mb-5 w-32" alt="" />
 
           <p className="w-full md:w-2/3 text-gray-600">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam
-            itaque distinctio et quas? Voluptatum in sit architecto repellendus
-            similique fugit.
+            Discover Your Signature Scent.
+            Welcome to our perfume store, where elegance meets passion. Explore a curated collection of exquisite fragrances crafted to captivate and inspire. 
+            Whether you seek a timeless classic or a modern aroma, find your perfect scent and express your unique style with every spray.
           </p>
         </div>
 
         <div>
           <p className="text-xl font-medium mb-5">COMPANY</p>
           <ul className="flex flex-col gap-1 text-gray-600">
-            <li>Home</li>
-            <li>About Us</li>
-            <li>Delivery</li>
+            <Link to={"/"}>Home</Link>
+            <Link to={"/about"}>About us</Link>
             <li>Privacy Policy</li>
           </ul>
         </div>
@@ -27,7 +26,7 @@ const Footer = () => {
         <div>
           <p className="text-xl font-medium mb-5">GET IN TOUCH</p>
           <ul className="flex flex-col gap-1 text-gray-600">
-            <li>+1-212-521-4569</li>
+            <li>0771478789</li>
             <li>contact@foreveryou.com</li>
           </ul>
         </div>

@@ -5,8 +5,14 @@ import axios from "axios";
 
 export const ShopContext = createContext();
 
+const volumeMultipliers = {
+  "50": 1,
+  "100": 1.2806,
+  "150": 1.5364,
+};
+
 const ShopContextProvider = (props) => {
-  const currency = "$";
+  const currency = "RON ";
   const delivery_fee = 10;
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const [search, setSearch] = useState("");
@@ -33,7 +39,6 @@ const ShopContextProvider = (props) => {
       }
     } else {
       cartData[itemId] = {};
-
       cartData[itemId][size] = 1;
     }
 
@@ -70,9 +75,7 @@ const ShopContextProvider = (props) => {
 
   const updateQuantity = async (itemId, size, quantity) => {
     let cartData = structuredClone(cartItems);
-
     cartData[itemId][size] = quantity;
-
     setCartItems(cartData);
 
     if (token) {
@@ -94,16 +97,18 @@ const ShopContextProvider = (props) => {
     for (const items in cartItems) {
       let itemInfo = products.find((product) => product._id === items);
 
-      for (const item in cartItems[items]) {
+      if (!itemInfo) continue;
+
+      for (const size in cartItems[items]) {
         try {
-          if (cartItems[items][item] > 0) {
-            totalAmount += itemInfo.price * cartItems[items][item];
+          if (cartItems[items][size] > 0) {
+            const multiplier = volumeMultipliers[size] || 1;
+            totalAmount += itemInfo.price * multiplier * cartItems[items][size];
           }
         } catch (e) {}
       }
     }
-
-    return totalAmount;
+    return totalAmount.toFixed(2);
   };
 
   const getProductsData = async () => {
@@ -167,6 +172,7 @@ const ShopContextProvider = (props) => {
     token,
     setToken,
     setCartItems,
+    volumeMultipliers,  // export multipliers here too for use in components
   };
 
   return (

@@ -1,4 +1,4 @@
-import { assets } from "../assets/assets";
+
 import NewsletterBox from "../components/NewsletterBox";
 import Title from "../components/Title";
 
@@ -11,18 +11,17 @@ const Contact = () => {
 
       <div className="my-10 flex flex-col justify-center md:flex-row gap-10 mb-28">
         <img
-          src={assets.contact_img}
+          src="/contact_img.png"
           className="w-full md:max-w-[480px]"
           alt=""
         />
         <div className="flex flex-col justify-center items-start gap-6">
           <p className="font-semibold text-xl text-gray-600">Our Store</p>
           <p className="text-gray-500">
-            54709 Willms Station <br /> Suite 350, Washington, USA
+            Strada Brasov 35 <br /> Bucuresti, sector 6
           </p>
           <p className="text-gray-500">
-            {" "}
-            Tel: (415) 666-0132 <br /> Email: admin@forever.com{" "}
+            Tel: 0771478789 <br /> Email: stefanmatei62@yahoo.ro
           </p>
           <p className="font-semibold text-xl text-gray-600">
             Careers at Forever

@@ -1,22 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import { assets } from "../assets/assets";
+
 import RelatedProduct from "../components/RelatedProduct";
 
 const Product = () => {
   const { productId } = useParams();
-  const { products, currency, cartItems, addToCart } = useContext(ShopContext);
+  const { products, currency, addToCart, volumeMultipliers } =
+    useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState("");
-  const [size, setSize] = useState("");
+  const [size, setSize] = useState("50"); // default size 50ml
 
   const fetchProductData = async () => {
     products.map((item) => {
       if (item._id === productId) {
         setProductData(item);
         setImage(item.image[0]);
-
+        if (item.sizes && item.sizes.length > 0) {
+          setSize(item.sizes[0]);
+        }
         return null;
       }
     });
@@ -24,7 +27,11 @@ const Product = () => {
 
   useEffect(() => {
     fetchProductData();
-  }, [productId]);
+  }, [productId, products]);
+
+  const calculatedPrice = productData
+    ? (productData.price * (volumeMultipliers[size] || 1)).toFixed(2)
+    : 0;
 
   return productData ? (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
@@ -44,7 +51,7 @@ const Product = () => {
               />
             ))}
           </div>
-          <div className="w-full sm:w-[80%]">
+          <div className="w-full sm:w-[50%]">
             <img src={image} className="w-full h-auto" alt="" />
           </div>
         </div>
@@ -53,45 +60,74 @@ const Product = () => {
         <div className="flex-1 ">
           <h1 className="font-medium text-2xl my-2">{productData.name}</h1>
           <div className="flex items-center gap-1 mt-2">
-            <img className="w-3.5" src={assets.star_icon} alt="" />
-            <img className="w-3.5" src={assets.star_icon} alt="" />
-            <img className="w-3.5" src={assets.star_icon} alt="" />
-            <img className="w-3.5" src={assets.star_icon} alt="" />
-            <img className="w-3.5" src={assets.star_dull_icon} alt="" />
+            <img className="w-3.5" src="/star_icon.png" alt="" />
+            <img className="w-3.5" src="/star_icon.png" alt="" />
+            <img className="w-3.5" src="/star_icon.png" alt="" />
+            <img className="w-3.5" src="/star_icon.png" alt="" />
+            <img className="w-3.5" src="/star_dull_icon.png" alt="" />
             <p className="pl-2">(122)</p>
           </div>
           <p className="mt-5 text-3xl font-medium">
+            {calculatedPrice}
             {currency}
-            {productData.price}
           </p>
           <p className="mt-5 text-gray-500 md:w-4/5">
             {productData.description}
           </p>
+          <p className="mt-5 text-gray-500 md:w-4/5">{productData.type}</p>
           <div className="flex flex-col gap-4 my-8">
-            <p>Select Size</p>
-            <div className="flex gap-2">
-              {productData.sizes.map((item, i) => (
-                <button
-                  className={`border py-2 px-4 bg-gray-100 ${
-                    item === size ? "border-orange-500" : ""
-                  }`}
-                  key={i}
-                  onClick={() => setSize(item)}
-                >
-                  {item}
-                </button>
-              ))}
+            <p>Select Volume</p>
+            <div className="flex flex-col gap-2">
+              <div className="flex gap-2 flex-wrap">
+                {productData.sizes.map((item, i) => {
+                  const isOutOfStock =
+                    !productData.quantity?.[item] ||
+                    productData.quantity[item] === 0;
+
+                  return (
+                    <button
+                      className={`border py-2 px-4 ${
+                        isOutOfStock
+                          ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                          : "bg-gray-100"
+                      } ${item === size ? "border-orange-500" : ""}`}
+                      key={i}
+                      onClick={() => !isOutOfStock && setSize(item)}
+                      disabled={isOutOfStock}
+                    >
+                      {item} ml
+                    </button>
+                  );
+                })}
+              </div>
+
+              {!productData.quantity?.[size] ||
+              productData.quantity[size] === 0 ? (
+                <span className="text-red-500 text-sm mt-1">
+                  Out of stock :(
+                </span>
+              ) : null}
             </div>
           </div>
 
           <button
-            className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
-            onClick={() => addToCart(productData._id, size)}
+            className={`px-8 py-3 text-sm ${
+              !productData.quantity?.[size] || productData.quantity[size] === 0
+                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                : "bg-black text-white active:bg-gray-700"
+            }`}
+            onClick={() => {  
+              if (productData.quantity?.[size] > 0) {
+                addToCart(productData._id, size);
+              }
+            }}
+            disabled={
+              !productData.quantity?.[size] || productData.quantity[size] === 0
+            }
           >
             ADD TO CART
           </button>
           <hr className="mt-8 sm:w-4/5" />
-
           <div className="text-sm text-gray-500 mt-5 flex flex-col gap-1">
             <p>100% Original Product.</p>
             <p>Cash o delivery is available on this product.</p>
@@ -106,33 +142,21 @@ const Product = () => {
           <b className="border px-5 py-3 text-sm ">Description</b>
           <p className="border px-5 py-3 text-sm ">Reviews (122)</p>
         </div>
-        <div className="flex flex-col gap-4 border px-6 py-6 text-sm text-gray-500">
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae
-            dolor, consequuntur totam nostrum praesentium distinctio accusamus
-            assumenda architecto alias veritatis autem. Non facilis alias
-            quaerat quasi cumque nisi. Suscipit cupiditate perspiciatis
-            laudantium error quibusdam facere, praesentium delectus cum rerum
-            tempore laboriosam temporibus. Id voluptatibus quia, optio provident
-            nesciunt debitis. Harum!
-          </p>
-          <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Qui quos
-            deleniti corrupti dolore commodi deserunt, dicta ipsam ex nemo
-            animi.
-          </p>
+        <div className="flex flex-col gap-4 border px-3 py-6 text-sm text-gray-500">
+          <p>{productData.productInfo}</p>
         </div>
       </div>
 
-      {/* DISPLAY RELATED PRODUCTS */}
-      <RelatedProduct
-        category={productData.category}
-        subCategory={productData.subCategory}
-      />
+      {/* RELATED PRODUCTS */}
+      <div className="mt-20 mb-20">
+        <RelatedProduct
+          subCategory={productData.subCategory}
+          type={productData.type}
+          currentId={productData._id}
+        />
+      </div>
     </div>
-  ) : (
-    <div className="opacity-0"></div>
-  );
+  ) : null;
 };
 
 export default Product;

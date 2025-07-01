@@ -4,13 +4,15 @@ import SideBar from "./components/SideBar";
 import Add from "./pages/Add";
 import List from "./pages/List";
 import Order from "./pages/Order";
+import Dashboard from "./pages/Dashboard";
+
 import { useEffect, useState } from "react";
 import Login from "./components/Login";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
-export const currency = "$";
+export const currency = "RON";
 
 const App = () => {
   const [token, setToken] = useState(
@@ -37,6 +39,7 @@ const App = () => {
                 <Route path="/add" element={<Add token={token} />} />
                 <Route path="/list" element={<List token={token} />} />
                 <Route path="/order" element={<Order token={token} />} />
+                <Route path="/dashboard" element={<Dashboard token={token}/>}/>
               </Routes>
             </div>
           </div>

@@ -1,0 +1,46 @@
+
+
+1. Folder Structure:
+
+d:/Forever/
+├── admin/                          # Admin panel (React + Vite)
+│   ├── package.json                # Admin dependencies and scripts
+│   ├── src/
+│   │   ├── App.jsx                # Main admin React component managing auth and routing
+│   │   ├── components/            # UI components (Navbar, SideBar, etc.)
+│   │   ├── pages/                 # Admin pages (Add, List, Order, Dashboard)
+│   │   └── assets/                # Static assets (icons, images)
+│
+├── backend/                       # Backend server (Node.js + Express)
+│   ├── package.json               # Backend dependencies and scripts
+│   ├── server.js                  # Express server setup and route registration
+│   ├── config/                   # MongoDB and Cloudinary config
+│   ├── controllers/               # API business logic (productController, userController, etc.)
+│   ├── middleware/                # Auth and file upload middleware
+│   ├── models/                   # Mongoose schemas (productModel, userModel, orderModel)
+│   └── routes/                   # Express routes mapping endpoints to controllers
+│
+└── frontend/                     # Frontend client (React + Vite)
+    ├── package.json             # Frontend dependencies and scripts
+    ├── src/
+    │   ├── App.jsx              # Main React component with routing and layout
+    │   ├── components/          # UI components (Navbar, Footer, etc.)
+    │   ├── context/             # React context for global state (ShopContext)
+    │   └── pages/               # User-facing pages (Home, Collection, Product, Cart, Login, Orders, etc.)
+
+2. Data Flow:
+
+[Admin Panel] <----> [Backend API] <----> [MongoDB Database]
+    |                      |
+    |                      +----> Cloudinary (for image uploads)
+    |
+[Frontend Client] <--------+
+
+- The Admin Panel and Frontend Client both communicate with the Backend API via HTTP requests.
+- The Backend API handles business logic, data validation, and persistence.
+- Images uploaded from Admin Panel are stored in Cloudinary.
+- Product, User, Cart, and Order data are stored in MongoDB.
+- The Frontend Client provides the shopping experience to users, fetching product data and submitting orders.
+- The Admin Panel allows authenticated users to manage products and orders.
+
+
