@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -68,7 +70,7 @@ const Dashboard = ({ token }) => {
 
   // Funcție pentru generare raport PDF
   
-const generateFancyPDFReport = (sales, dateFrom, dateTo) => {
+  const generateFancyPDFReport = (sales, dateFrom, dateTo) => {
   const doc = new jsPDF();
 
   const dateFromStr = dateFrom.toLocaleDateString("ro-RO");

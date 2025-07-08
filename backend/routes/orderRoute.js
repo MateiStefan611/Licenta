@@ -2,7 +2,6 @@ import express from "express";
 import {
   allOrders,
   placeOrder,
-  placeOrderRazorpay,
   placeOrderStripe,
   updateStatus,
   userOrders,
@@ -25,7 +24,7 @@ orderRouter.delete("/delete/:orderId", adminAuth, deleteOrder);
 //PAYMENT FEATURE
 orderRouter.post("/place", authUser, placeOrder);
 orderRouter.post("/stripe", authUser, placeOrderStripe);
-orderRouter.post("/razorpay", authUser, placeOrderRazorpay);
+
 
 //USER FEATURE
 orderRouter.post("/userorders", authUser, userOrders);

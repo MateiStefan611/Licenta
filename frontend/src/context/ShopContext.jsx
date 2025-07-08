@@ -172,7 +172,7 @@ const ShopContextProvider = (props) => {
     token,
     setToken,
     setCartItems,
-    volumeMultipliers,  // export multipliers here too for use in components
+    volumeMultipliers,  
   };
 
   return (

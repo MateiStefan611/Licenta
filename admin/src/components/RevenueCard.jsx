@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import React, { useState, useMemo } from "react";
 
 const RevenueCard = ({ sales }) => {
@@ -38,7 +40,7 @@ const RevenueCard = ({ sales }) => {
   // Datele lunii curente (pagina curentă)
   const currentMonthData = salesGroupedByMonth[currentPage - 1] || { days: [], totalAmount: 0, month: "" };
 
-  // Formatează luna pentru afișare, ex: "Iunie 2025"
+
   const formatMonth = (monthStr) => {
     const [year, month] = monthStr.split("-");
     const date = new Date(year, Number(month) - 1);
@@ -80,7 +82,7 @@ const RevenueCard = ({ sales }) => {
         </div>
       )}
 
-      {/* Pagination controls */}
+        {/*Pagination controls*/}
       <div className="flex justify-center items-center gap-4 mt-6">
         <button
           disabled={currentPage === 1}

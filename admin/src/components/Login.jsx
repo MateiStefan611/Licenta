@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import axios from "axios";
 import { backendUrl } from "../App";
@@ -22,8 +24,7 @@ const Login = ({ setToken }) => {
         toast.error(response.data.message);
       }
     } catch (error) {
-      //   console.log(error);
-      //   toast.error(error.message);
+      //
     }
   };
 

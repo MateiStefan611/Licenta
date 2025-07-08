@@ -46,7 +46,6 @@ const Add = ({ token, product = null, isEdit = false, onEditSuccess }) => {
       if (product.quantity) {
         const productQuantities = {};
         if (typeof product.quantity === 'object') {
-          // If it's already an object/Map
           productQuantities["50"] = product.quantity["50"]?.toString() || "";
           productQuantities["100"] = product.quantity["100"]?.toString() || "";
           productQuantities["150"] = product.quantity["150"]?.toString() || "";
@@ -113,7 +112,7 @@ const Add = ({ token, product = null, isEdit = false, onEditSuccess }) => {
       });
       formData.append("quantity", JSON.stringify(quantityMap));
 
-      // Helper function to append only file objects, not existing URLs
+   
       const appendImage = (fieldName, imageValue) => {
         if (imageValue && typeof imageValue !== "string") {
           formData.append(fieldName, imageValue);
@@ -355,7 +354,7 @@ const Add = ({ token, product = null, isEdit = false, onEditSuccess }) => {
         </div>
       </div>
 
-      {/* Updated Inventory Management Section */}
+      {/* Inventory Management Section */}
       <div className="w-full rounded-lg">
         <h3 className="text-lg font-semibold mb-3 text-gray-700">📦 Inventory Management</h3>
         <div className="grid grid-cols-1 md:grid-cols-6">
