@@ -331,7 +331,7 @@ export const getMonthlySales = async (req, res) => {
       const date = new Date(order.createdAt);
       const key = `${date.getFullYear()}-${(date.getMonth() + 1)
         .toString()
-        .padStart(2, "0")}`; // ex: "2025-06"
+        .padStart(2, "0")}`; 
 
       if (!grouped[key]) {
         grouped[key] = { total: 0, count: 0 };

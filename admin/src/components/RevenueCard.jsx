@@ -82,7 +82,7 @@ const RevenueCard = ({ sales }) => {
         </div>
       )}
 
-        {/*Pagination controls*/}
+        {/*Paginare*/}
       <div className="flex justify-center items-center gap-4 mt-6">
         <button
           disabled={currentPage === 1}

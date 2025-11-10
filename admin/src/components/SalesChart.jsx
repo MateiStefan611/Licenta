@@ -16,10 +16,10 @@ const SalesChart = ({ data, loading }) => {
   if (loading) return <p>Loading sales data...</p>;
   if (!data || data.length === 0) return <p>No sales data available.</p>;
 
-  // Formatter pentru YAxis stânga (orders count) - afișează doar întregi
+  // Formatter pentru YAxis stânga (orders count) 
   const formatCount = (value) => Math.round(value);
 
-  // Formatter pentru YAxis dreapta (total amount) - 2 zecimale, prefix RON
+  // Formatter pentru YAxis dreapta (total amount) 
   const formatAmount = (value) => `RON ${value.toFixed(2)}`;
 
   // Formatter pentru Tooltip

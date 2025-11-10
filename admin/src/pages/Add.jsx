@@ -77,103 +77,114 @@ const Add = ({ token, product = null, isEdit = false, onEditSuccess }) => {
   };
 
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    
-    // Validate that at least one size has quantity
-    const hasValidQuantity = Object.values(quantities).some(qty => 
-      qty !== "" && parseInt(qty) >= 0
-    );
-    
-    if (!hasValidQuantity) {
-      toast.error("Please enter valid quantities for at least one size");
-      return;
+  e.preventDefault();
+
+  // Validate that at least one size has quantity
+  const hasValidQuantity = Object.values(quantities).some(qty =>
+    qty !== "" && parseInt(qty) >= 0
+  );
+
+  if (!hasValidQuantity) {
+    toast.error("Please enter valid quantities for at least one size");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("category", category);
+    formData.append("subCategory", subCategory);
+    formData.append("bestSeller", bestSeller.toString());
+    formData.append("type", type);
+    formData.append("productInfo", productInfo);
+    formData.append("lowStockThreshold", lowStockThreshold);
+
+    // Convert quantities object to the format expected by the backend
+    const quantityMap = {};
+    Object.keys(quantities).forEach(size => {
+      if (quantities[size] !== "") {
+        quantityMap[size] = parseInt(quantities[size]) || 0;
+      }
+    });
+    formData.append("quantity", JSON.stringify(quantityMap));
+
+    // If sizes are empty, infer them from quantity keys
+    let finalSizes = sizes;
+    if (!finalSizes || finalSizes.length === 0) {
+      const sizesFromQuantities = Object.keys(quantityMap);
+      if (sizesFromQuantities.length === 0) {
+        toast.error("Please select at least one size or enter quantity");
+        return;
+      }
+      finalSizes = sizesFromQuantities;
     }
-    
-    try {
-      const formData = new FormData();
+    formData.append("sizes", JSON.stringify(finalSizes));
 
-      formData.append("name", name);
-      formData.append("description", description);
-      formData.append("price", price);
-      formData.append("category", category);
-      formData.append("subCategory", subCategory);
-      formData.append("bestSeller", bestSeller.toString());
-      formData.append("sizes", JSON.stringify(sizes));
-      formData.append("type", type);
-      formData.append("productInfo", productInfo);
-      formData.append("lowStockThreshold", lowStockThreshold);
+    // Image uploads
+    const appendImage = (fieldName, imageValue) => {
+      if (imageValue && typeof imageValue !== "string") {
+        formData.append(fieldName, imageValue);
+      }
+    };
 
-      // Convert quantities object to the format expected by the backend
-      const quantityMap = {};
-      Object.keys(quantities).forEach(size => {
-        if (quantities[size] !== "") {
-          quantityMap[size] = parseInt(quantities[size]) || 0;
-        }
+    appendImage("image1", image1);
+    appendImage("image2", image2);
+    appendImage("image3", image3);
+    appendImage("image4", image4);
+
+    let response;
+
+    if (isEdit && product?._id) {
+      console.log("Editing product with id:", product._id);
+      formData.append("productId", product._id);
+      response = await axios.post(
+        backendUrl + "/api/product/edit",
+        formData,
+        { headers: { token } }
+      );
+    } else {
+      response = await axios.post(backendUrl + "/api/product/add", formData, {
+        headers: { token },
       });
-      formData.append("quantity", JSON.stringify(quantityMap));
-
-   
-      const appendImage = (fieldName, imageValue) => {
-        if (imageValue && typeof imageValue !== "string") {
-          formData.append(fieldName, imageValue);
-        }
-      };
-
-      appendImage("image1", image1);
-      appendImage("image2", image2);
-      appendImage("image3", image3);
-      appendImage("image4", image4);
-
-      let response;
-
-      if (isEdit && product?._id) {
-        console.log("Editing product with id:", product._id);
-        formData.append("productId", product._id);
-        response = await axios.post(
-          backendUrl + "/api/product/edit",
-          formData,
-          { headers: { token } }
-        );
-      } else {
-        response = await axios.post(backendUrl + "/api/product/add", formData, {
-          headers: { token },
-        });
-      }
-
-      if (response.data.success) {
-        toast.success(response.data.message);
-        if (!isEdit) {
-          
-          setName("");
-          setDescription("");
-          setImage1(false);
-          setImage2(false);
-          setImage3(false);
-          setImage4(false);
-          setPrice("");
-          setCategory("Men");
-          setSubCategory("Parfum");
-          setType("Floral");
-          setBestSeller(false);
-          setSizes([]);
-          setProductInfo("");
-          setQuantities({
-            "50": "",
-            "100": "",
-            "150": ""
-          });
-          setLowStockThreshold("5");
-        } else {
-          if (onEditSuccess) onEditSuccess();
-        }
-      } else {
-        toast.error(response.data.message);
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
     }
-  };
+
+    if (response.data.success) {
+      toast.success(response.data.message);
+      if (!isEdit) {
+        // Reset form
+        setName("");
+        setDescription("");
+        setImage1(false);
+        setImage2(false);
+        setImage3(false);
+        setImage4(false);
+        setPrice("");
+        setCategory("Men");
+        setSubCategory("Parfum");
+        setType("Floral");
+        setBestSeller(false);
+        setSizes([]);
+        setProductInfo("");
+        setQuantities({
+          "50": "",
+          "100": "",
+          "150": ""
+        });
+        setLowStockThreshold("5");
+      } else {
+        if (onEditSuccess) onEditSuccess();
+      }
+    } else {
+      toast.error(response.data.message);
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message);
+  }
+};
 
   return (
     <form

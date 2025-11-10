@@ -14,6 +14,9 @@ const Collection = () => {
   const [subCategory, setSubCategory] = useState([]);
   const [sortType, setSortType] = useState("relevant");
 
+  // Afișăm 12 produse la început și la "vezi mai multe" creștem limita
+  const [visibleCount, setVisibleCount] = useState(12);
+
   const toggleCategory = (e) => {
     const value = e.target.value;
     if (category.includes(value)) {
@@ -57,14 +60,12 @@ const Collection = () => {
     }
 
     if (subCategory.length > 0) {
-      productsCopy = productsCopy.filter((item) => {
-        // Debug: log each product's subCategory and the filter values
-        console.log("Checking subCategory:", item.subCategory, "against filter:", subCategory);
-        return subCategory.some(
+      productsCopy = productsCopy.filter((item) =>
+        subCategory.some(
           (filterVal) =>
             filterVal.toLowerCase().trim() === item.subCategory.toLowerCase().trim()
-        );
-      });
+        )
+      );
     }
 
     if (type.length > 0) {
@@ -73,7 +74,6 @@ const Collection = () => {
       );
     }
 
-    console.log("Filtered products count:", productsCopy.length);
     setFilterProducts(productsCopy);
   };
 
@@ -95,19 +95,15 @@ const Collection = () => {
     }
   };
 
+  // Resetăm numărul vizibil de produse la schimbarea filtrelor, căutării sau produselor
   useEffect(() => {
     applyFilter();
+    setVisibleCount(12);
   }, [category, subCategory, type, search, showSearch, products]);
 
   useEffect(() => {
     sortProduct();
   }, [sortType]);
-
-  // Debug: Log unique subCategories from products on each render (optional)
-  useEffect(() => {
-    const uniqueSubCategories = [...new Set(products.map(p => p.subCategory))];
-    console.log("Unique subCategories in products:", uniqueSubCategories);
-  }, [products]);
 
   return (
     <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
@@ -266,7 +262,7 @@ const Collection = () => {
 
         {/* MAP PRODUCTS */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6">
-          {filterProducts.map((item, i) => (
+          {filterProducts.slice(0, visibleCount).map((item, i) => (
             <ProductItem
               key={i}
               id={item._id}
@@ -277,6 +273,18 @@ const Collection = () => {
             />
           ))}
         </div>
+
+        {/* BUTTON VEZI MAI MULTE */}
+        {visibleCount < filterProducts.length && (
+          <div className="flex justify-center mt-6">
+            <button
+              onClick={() => setVisibleCount((prev) => prev + 12)}
+              className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+            >
+              Show more
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

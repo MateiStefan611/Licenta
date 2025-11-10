@@ -11,6 +11,9 @@ const List = ({ token }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 7;
 
+  const [categorySortOrder, setCategorySortOrder] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const fetchList = async () => {
     try {
       const response = await axios.get(backendUrl + "/api/product/list");
@@ -56,21 +59,18 @@ const List = ({ token }) => {
     await fetchList();
   };
 
-  // Funcție pentru a calcula cantitatea totală și status-ul stocului
   const getQuantityInfo = (product) => {
     let totalQuantity = 0;
     let lowStockCount = 0;
     let outOfStockCount = 0;
     const quantities = [];
 
-    // Verifică dacă quantity este obiect sau număr
-    if (typeof product.quantity === 'object' && product.quantity !== null) {
-      // Quantity este obiect cu chei pentru fiecare mărime
+    if (typeof product.quantity === "object" && product.quantity !== null) {
       Object.entries(product.quantity).forEach(([size, qty]) => {
         const quantity = Number(qty) || 0;
         totalQuantity += quantity;
         quantities.push({ size, quantity });
-        
+
         if (quantity === 0) {
           outOfStockCount++;
         } else if (quantity <= (product.lowStockThreshold || 50)) {
@@ -78,10 +78,9 @@ const List = ({ token }) => {
         }
       });
     } else {
-      // Fallback pentru quantity ca număr simplu (compatibilitate înapoi)
       totalQuantity = Number(product.quantity) || 0;
-      quantities.push({ size: 'total', quantity: totalQuantity });
-      
+      quantities.push({ size: "total", quantity: totalQuantity });
+
       if (totalQuantity === 0) {
         outOfStockCount = 1;
       } else if (totalQuantity <= (product.lowStockThreshold || 50)) {
@@ -89,16 +88,15 @@ const List = ({ token }) => {
       }
     }
 
-    // Determină status-ul general
-    let status = 'In Stock';
-    let statusClass = 'bg-green-100 text-green-800';
-    
+    let status = "In Stock";
+    let statusClass = "bg-green-100 text-green-800";
+
     if (totalQuantity === 0 || outOfStockCount === quantities.length) {
-      status = 'Out of Stock';
-      statusClass = 'bg-red-100 text-red-800';
+      status = "Out of Stock";
+      statusClass = "bg-red-100 text-red-800";
     } else if (outOfStockCount > 0 || lowStockCount > 0) {
-      status = 'Low Stock';
-      statusClass = 'bg-yellow-100 text-yellow-800';
+      status = "Low Stock";
+      statusClass = "bg-yellow-100 text-yellow-800";
     }
 
     return { totalQuantity, quantities, status, statusClass };
@@ -108,24 +106,49 @@ const List = ({ token }) => {
     fetchList();
   }, []);
 
+  // Filtrare dupa search
+  const filteredList = list.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Sortez lista filtrata in functie de categorySortOrder
+  const sortedList = [...filteredList];
+  if (categorySortOrder === "asc") {
+    sortedList.sort((a, b) => a.category.localeCompare(b.category));
+  } else if (categorySortOrder === "desc") {
+    sortedList.sort((a, b) => b.category.localeCompare(a.category));
+  }
+
+  // Paginare pe lista sortata
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = list.slice(indexOfFirstProduct, indexOfLastProduct);
-  const totalPages = Math.ceil(list.length / productsPerPage);
+  const currentProducts = sortedList.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(sortedList.length / productsPerPage);
+
+  // Reset paginare la schimbarea cautarii
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm]);
 
   return (
     <>
       <p className="mb-2">All Products Lists</p>
 
+      {/* Input Search */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search products by name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border px-3 py-2 rounded w-full max-w-sm"
+        />
+      </div>
+
       {showEditForm && editingProduct && (
         <div className="mb-6 border p-4 rounded bg-gray-50">
           <h2 className="text-lg font-semibold mb-4">Edit Product</h2>
-          <Add
-            token={token}
-            product={editingProduct}
-            isEdit={true}
-            onEditSuccess={onEditSuccess}
-          />
+          <Add token={token} product={editingProduct} isEdit={true} onEditSuccess={onEditSuccess} />
           <button
             onClick={() => setShowEditForm(false)}
             className="mt-3 text-red-500 underline"
@@ -139,16 +162,27 @@ const List = ({ token }) => {
         <div className="hidden md:grid grid-cols-[1fr_3fr_1fr_1fr_2fr_1fr_1fr_1fr] items-center py-1 px-2 border text-sm bg-gray-100">
           <b>Image</b>
           <b>Name</b>
-          <b>Category</b>
+          <button
+            onClick={() => {
+              if (categorySortOrder === "asc") setCategorySortOrder("desc");
+              else setCategorySortOrder("asc");
+            }}
+            className="flex items-center gap-1 font-semibold hover:underline"
+            title="Click to sort by category"
+          >
+            Category
+            {categorySortOrder === "asc" && <span> ▲</span>}
+            {categorySortOrder === "desc" && <span> ▼</span>}
+          </button>
           <b>Price</b>
-          <b>Quantities by Size</b> 
+          <b>Quantities by Size</b>
           <b className="text-center">Action</b>
           <b className="text-center">Edit</b>
         </div>
 
         {currentProducts.map((item) => {
           const quantityInfo = getQuantityInfo(item);
-          
+
           return (
             <div
               key={item._id}
@@ -161,31 +195,26 @@ const List = ({ token }) => {
                 {currency}
                 {item.price}
               </p>
-              
-              {/* Afișează cantitățile pentru fiecare mărime */}
+
               <div className="text-xs">
-                <div className="font-medium mb-1">
-                  Total: {quantityInfo.totalQuantity}
-                </div>
+                <div className="font-medium mb-1">Total: {quantityInfo.totalQuantity}</div>
                 <div className="flex flex-wrap gap-1">
                   {quantityInfo.quantities.map(({ size, quantity }) => (
                     <span
                       key={size}
                       className={`px-2 py-1 rounded text-xs ${
                         quantity === 0
-                          ? 'bg-red-50 text-red-700 border border-red-200'
+                          ? "bg-red-50 text-red-700 border border-red-200"
                           : quantity <= (item.lowStockThreshold || 50)
-                          ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                          : 'bg-green-50 text-green-700 border border-green-200'
+                          ? "bg-yellow-50 text-yellow-700 border border-yellow-200"
+                          : "bg-green-50 text-green-700 border border-green-200"
                       }`}
                     >
-                      {size !== 'total' ? `${size}ml: ${quantity}` : quantity}
+                      {size !== "total" ? `${size}ml: ${quantity}` : quantity}
                     </span>
                   ))}
                 </div>
               </div>
-
-    
 
               <p
                 onClick={() => removeProduct(item._id)}

@@ -18,7 +18,7 @@ const Order = ({ token }) => {
 
       if (res.data.success) {
         toast.success("Order deleted successfully");
-        fetchAllOrders(); // refresh list after deletion
+        fetchAllOrders(); 
       } else {
         toast.error(res.data.message);
       }
