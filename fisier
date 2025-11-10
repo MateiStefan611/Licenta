@@ -1,0 +1,8 @@
+MONGODB_URI=mongodb+srv://MateiStefan:7XLmeitVwA4UWhE@cluster0.nfdjrkx.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+JWT_SECRET=bafjhafh98726716498721649172jsagjf!!^!2$&*&@^!&@$$!@^&%$!87216491bafjhafh987hbadfwadalknfujhfiuegfuywriuqwrjahger45856015712-h4qjwghsagfdshfiehf235-23rhlagfidsf9eyfldsbfhkjg
+CLOUDINARY_API_KEY  = 489135813514472
+CLOUDINARY_SECRET_KEY = wm4XSgemuGnLDJiSb1zL1RLe0vQ
+CLOUDINARY_NAME = dxvcsyd6e
+ADMIN_EMAIL = stefanmatei62@yahoo.ro
+ADMIN_PASSWORD = ParolaAdmin
+STRIPE_SECRET_KEY = sk_test_51P7Bb4KmqoDDsNnU3gIbxI4UW5HvBWaW0LLvegy4w2fF9isk0OBVRGetEyOg8MnBo2ZAy1bKep3piWdAi0sh4HAn00EwTwUteD
