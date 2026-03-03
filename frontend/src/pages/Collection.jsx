@@ -108,10 +108,10 @@ const Collection = () => {
   return (
     <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
       {/* FILTER OPTIONS */}
-      <div className="min-w-60">
+      <div className="min-w-60 rounded-2xl">
         <p
           onClick={() => setShowFilter(!showFilter)}
-          className="my-2 text-xl flex items-center cursor-pointer gap-2"
+          className="my-2 text-xl flex items-center cursor-pointer gap-2 "
         >
           FILTERS
           <img
@@ -122,11 +122,11 @@ const Collection = () => {
         </p>
         {/* CATEGORY FILTER */}
         <div
-          className={`border border-gray-300 pl-5 py-3 mt-6 ${
+          className={`border rounded-2xl border-gray-300 pl-5 py-3 mt-6 ${
             showFilter ? " " : "hidden"
           } sm:block`}
         >
-          <p className="mb-3 text-sm font-medium">Categories</p>
+          <p className="mb-3 text-sm font-medium ">Categories</p>
           <div className="flex flex-col gap-2 text-sm font-light text-gray-700">
             <p className="flex gap-2">
               <input
@@ -151,7 +151,7 @@ const Collection = () => {
 
         {/* SUBCATEGORIES FILTER */}
         <div
-          className={`border border-gray-300 pl-5 py-3 my-5 ${
+          className={`border rounded-2xl border-gray-300 pl-5 py-3 my-5 ${
             showFilter ? " " : "hidden"
           } sm:block`}
         >
@@ -189,7 +189,7 @@ const Collection = () => {
 
         {/* TYPES */}
         <div
-          className={`border border-gray-300 pl-5 py-3 my-5 ${
+          className={`border rounded-2xl border-gray-300 pl-5 py-3 my-5 ${
             showFilter ? " " : "hidden"
           } sm:block`}
         >

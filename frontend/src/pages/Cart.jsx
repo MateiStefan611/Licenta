@@ -75,7 +75,7 @@ const Cart = () => {
               <input
                 className="border max-w-10 sm:max-w-20 px-1 sm:px-2 py-1"
                 type="number"
-                min={1}
+                max={5}
                 value={item.quantity}
                 onChange={(e) =>
                   e.target.value === "" || e.target.value === "0"
@@ -103,7 +103,7 @@ const Cart = () => {
           <CartTotal />
           <div className="w-full text-end">
             <button
-              className="bg-black text-white text-sm my-8 px-8 py-3"
+              className="bg-black text-white text-sm my-8 px-8 py-3 rounded-3xl"
               onClick={() => navigate("/place-order")}
             >
               PROCEED TO CHECKOUT
