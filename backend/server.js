@@ -15,7 +15,13 @@ connectDB();
 connectCloudinary();
 //Middlewares
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://licenta-frontend-url.vercel.app",
+    "https://licenta-admin-url.vercel.app"
+  ],
+  credentials: true
+}));
 
 //API endpoints
 app.use("/api/user", userRouter);
