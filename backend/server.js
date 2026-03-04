@@ -12,6 +12,7 @@ import orderRouter from "./routes/orderRoute.js";
 const app = express();
 const port = process.env.PORT || 4000;
 
+// Connect DB & Cloudinary
 connectDB();
 connectCloudinary();
 
@@ -20,23 +21,37 @@ app.use(express.json());
 
 // CORS Config
 const allowedOrigins = [
-  "https://licenta-frontend-url.vercel.app", // frontend live
-  "https://licenta-admin-url.vercel.app",    // admin live
-  "http://localhost:5173",                   // vite dev frontend
-  "http://localhost:5174"                    // vite dev admin, dacă ai alt port
+  "https://licenta-frontend-url.vercel.app",  // frontend live
+  "https://admin-iota-tan.vercel.app",        // admin live
+  "http://localhost:5173",                    // vite dev frontend
+  "http://localhost:5174"                     // vite dev admin
 ];
 
 app.use(cors({
   origin: function(origin, callback){
-    // allow requests with no origin (like mobile apps or curl)
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      const msg = `The CORS policy for this site does not allow access from the specified Origin.`;
-      return callback(new Error(msg), false);
+    if(!origin) return callback(null, true); // allow curl/Postman
+    if(!allowedOrigins.includes(origin)){
+      return callback(new Error("CORS: Origin not allowed"), false);
     }
     return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// Handle preflight OPTIONS requests
+app.options("*", cors({
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true);
+    if(!allowedOrigins.includes(origin)){
+      return callback(new Error("CORS: Origin not allowed"), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // API Endpoints
