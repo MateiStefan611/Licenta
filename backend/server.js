@@ -31,8 +31,7 @@ const corsOptions = {
 
     const isAllowed = 
       allowedOrigins.includes(origin) ||
-      /https:\/\/licenta-.*\.vercel\.app$/.test(origin) ||
-      /https:\/\/admin-.*\.vercel\.app$/.test(origin);
+      /https:\/\/.*\.vercel\.app$/.test(origin);  // permite orice *.vercel.app
 
     if(isAllowed) return callback(null, true);
     return callback(new Error("CORS: Origin not allowed"), false);
