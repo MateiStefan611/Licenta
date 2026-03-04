@@ -21,38 +21,29 @@ app.use(express.json());
 
 // CORS Config
 const allowedOrigins = [
-  "https://admin-mshzsx78o-stefas-projects-ed283907.vercel.app",  // frontend live
-  "https://licenta-gglpn71yr-stefas-projects-ed283907.vercel.app",        // admin live
-  "http://localhost:5173",                    // vite dev frontend
-  "http://localhost:5174"                     // vite dev admin
+  "http://localhost:5173",
+  "http://localhost:5174"
 ];
 
-app.use(cors({
-  origin: function(origin, callback){
-    if(!origin) return callback(null, true); // allow curl/Postman
-    if(!allowedOrigins.includes(origin)){
-      return callback(new Error("CORS: Origin not allowed"), false);
-    }
-    return callback(null, true);
-  },
-  credentials: true,
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-// Handle preflight OPTIONS requests
-app.options("*", cors({
+const corsOptions = {
   origin: function(origin, callback){
     if(!origin) return callback(null, true);
-    if(!allowedOrigins.includes(origin)){
-      return callback(new Error("CORS: Origin not allowed"), false);
-    }
-    return callback(null, true);
+
+    const isAllowed = 
+      allowedOrigins.includes(origin) ||
+      /https:\/\/licenta-.*\.vercel\.app$/.test(origin) ||
+      /https:\/\/admin-.*\.vercel\.app$/.test(origin);
+
+    if(isAllowed) return callback(null, true);
+    return callback(new Error("CORS: Origin not allowed"), false);
   },
   credentials: true,
   methods: ["GET","POST","PUT","DELETE","OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
-}));
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 // API Endpoints
 app.use("/api/user", userRouter);
