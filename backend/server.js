@@ -21,8 +21,8 @@ app.use(express.json());
 
 // CORS Config
 const allowedOrigins = [
-  "https://licenta-frontend-url.vercel.app",  // frontend live
-  "https://admin-iota-tan.vercel.app",        // admin live
+  "https://admin-mshzsx78o-stefas-projects-ed283907.vercel.app",  // frontend live
+  "https://licenta-gglpn71yr-stefas-projects-ed283907.vercel.app",        // admin live
   "http://localhost:5173",                    // vite dev frontend
   "http://localhost:5174"                     // vite dev admin
 ];
