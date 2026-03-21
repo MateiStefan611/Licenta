@@ -16,9 +16,6 @@ const port = process.env.PORT || 4000;
 connectDB();
 connectCloudinary();
 
-// Middlewares
-app.use(express.json());
-
 // CORS Config
 const allowedOrigins = [
   "http://localhost:5173",
@@ -31,7 +28,7 @@ const corsOptions = {
 
     const isAllowed = 
       allowedOrigins.includes(origin) ||
-      /https:\/\/.*\.vercel\.app$/.test(origin);  // permite orice *.vercel.app
+      /https:\/\/.*\.vercel\.app$/.test(origin);
 
     if(isAllowed) return callback(null, true);
     return callback(new Error("CORS: Origin not allowed"), false);
@@ -41,8 +38,10 @@ const corsOptions = {
   allowedHeaders: ["Content-Type", "Authorization"]
 };
 
+// Middlewares
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+app.use(express.json());
 
 // API Endpoints
 app.use("/api/user", userRouter);
