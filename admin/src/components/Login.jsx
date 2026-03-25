@@ -35,23 +35,23 @@ const Login = ({ setToken }) => {
         <form onSubmit={onSubmitHandler}>
           <div className="mb-3 mn-w-72">
             <p className="text-sm font-medium text-gray-700 mb-2">
-              Email Address
+              stefanmatei62@yahoo.ro
             </p>
             <input
               className="rounded-md w-full px-3 py-2 border border-gray-300 outline-none "
               type="email"
-              placeholder="your@email.com"
+              placeholder="stefanmatei62@yahoo.ro"
               required
               onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
           </div>
           <div className="mb-3 mn-w-72">
-            <p className="text-sm font-medium text-gray-700 mb-2">Password</p>
+            <p className="text-sm font-medium text-gray-700 mb-2">ParolaAdmin</p>
             <input
               className="rounded-md w-full px-3 py-2 border border-gray-300 outline-none "
               type="password"
-              placeholder="Enter your password"
+              placeholder="Enter ParolaAdmin"
               required
               onChange={(e) => setPassword(e.target.value)}
               value={password}
